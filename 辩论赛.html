@@ -1,0 +1,1069 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七（17）《西游记》辩论赛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            font-weight: normal;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .timers-container {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .timer-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .timer-section.active {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stages-section {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .voting-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .team-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .affirmative-timer .team-name {
+            color: #4CAF50;
+        }
+        
+        .negative-timer .team-name {
+            color: #F44336;
+        }
+        
+        .time-left {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a2a6c;
+            margin: 10px 0;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        
+        .time-left.yellow {
+            color: #FF9800;
+        }
+        
+        .time-left.red {
+            color: #F44336;
+        }
+        
+        .current-stage {
+            font-size: 1.2rem;
+            color: #b21f1f;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-start {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-pause {
+            background-color: #FFC107;
+            color: black;
+        }
+        
+        .btn-reset {
+            background-color: #F44336;
+            color: white;
+        }
+        
+        .btn-next {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .btn-end {
+            background-color: #9C27B0;
+            color: white;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .stages-list {
+            list-style: none;
+        }
+        
+        .stage-item {
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .stage-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .stage-item.active {
+            background-color: #e3f2fd;
+            border-left-color: #2196F3;
+            font-weight: bold;
+        }
+        
+        .stage-title {
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .stage-duration {
+            color: #666;
+            font-size: 0.75rem;
+        }
+        
+        .teams-display {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+        
+        .team {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 0 8px;
+            font-size: 0.9rem;
+        }
+        
+        .team-affirmative {
+            background-color: #e8f5e9;
+            border: 2px solid #4CAF50;
+        }
+        
+        .team-negative {
+            background-color: #ffebee;
+            border: 2px solid #F44336;
+        }
+        
+        .team-members {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .team-member {
+            flex: 1;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 0 5px;
+            color: black;
+        }
+        
+        .voting-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .voting-category {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            font-size: 0.9rem;
+        }
+        
+        .voting-category h3 {
+            margin-bottom: 10px;
+            color: #1a2a6c;
+            border-bottom: 1px solid #1a2a6c;
+            padding-bottom: 3px;
+            font-size: 1rem;
+        }
+        
+        .vote-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .vote-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .vote-option input {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .vote-option label {
+            font-size: 0.85rem;
+        }
+        
+        .results-section {
+            margin-top: 20px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .result-card {
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        .result-card h4 {
+            margin-bottom: 8px;
+            color: #1a2a6c;
+            font-size: 0.95rem;
+        }
+        
+        .result-bar {
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        
+        .result-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .affirmative-fill {
+            background-color: #4CAF50;
+        }
+        
+        .negative-fill {
+            background-color: #F44336;
+        }
+        
+        .result-count {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 3px;
+            font-size: 0.85rem;
+        }
+        
+        .affirmative-count {
+            color: #4CAF50;
+        }
+        
+        .negative-count {
+            color: #F44336;
+        }
+        
+        .candidates-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+        
+        .candidate-item {
+            padding: 5px;
+            margin-bottom: 3px;
+            background-color: #fff;
+            border-radius: 2px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        
+        .candidate-votes {
+            font-weight: bold;
+            color: #1a2a6c;
+        }
+        
+        .global-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .dual-result-bar {
+            display: flex;
+            height: 20px;
+            border-radius: 10px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        
+        /* 新增样式：团队名称在同一行 */
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+        
+        .team-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            flex: 1;
+            margin: 0 5px;
+            text-align: center;
+        }
+        
+        .team-affirmative-title {
+            background-color: #e8f5e9;
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .team-negative-title {
+            background-color: #ffebee;
+            border: 2px solid #F44336;
+            color: #F44336;
+        }
+        
+        /* 新增样式：最佳辩手左右排列 */
+        .best-debaters-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .best-debater-card {
+            flex: 1;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .best-debater-card h4 {
+            margin-bottom: 8px;
+            color: #1a2a6c;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        
+        /* 新增样式：界面切换 */
+        .debate-section {
+            display: block;
+        }
+        
+        .voting-section {
+            display: none;
+        }
+        
+        .back-to-debate {
+            background-color: #607D8B;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .time-left {
+                font-size: 2rem;
+            }
+            
+            .teams-display {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .team {
+                margin: 0;
+            }
+            
+            .team-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .best-debaters-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>七（17）《西游记》辩论赛</h1>
+            <p class="subtitle">辩题：取经团队的成功主要靠孙悟空还是团队协作？</p>
+        </header>
+        
+        <!-- 辩论计时界面 -->
+        <div class="debate-section" id="debateSection">
+            <!-- 修改：团队名称在同一行显示 -->
+            <div class="team-header">
+                <div class="team-title team-affirmative-title">
+                    正方：取经团队的成功主要靠孙悟空
+                    <div class="team-members">
+                        <div class="team-member">一辩：陶泓源</div>
+                        <div class="team-member">二辩：徐晨玥</div>
+                        <div class="team-member">三辩：白思睿</div>
+                        <div class="team-member">四辩：江成仪</div>
+                    </div>
+                </div>
+                <div class="team-title team-negative-title">
+                    反方：取经团队的成功靠的是团队协作
+                    <div class="team-members">
+                        <div class="team-member">一辩：邵向南</div>
+                        <div class="team-member">二辩：刘梓睿</div>
+                        <div class="team-member">三辩：林米诺</div>
+                        <div class="team-member">四辩：林名正</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="current-stage">第一阶段：开篇陈词</div>
+            
+            <div class="main-content">
+                <div class="timers-container">
+                    <div class="timer-section affirmative-timer active">
+                        <div class="team-name">正方计时器</div>
+                        <div class="time-left">01:00</div>
+                        <div class="control-buttons">
+                            <button class="btn-start">开始</button>
+                            <button class="btn-pause">暂停</button>
+                            <button class="btn-reset">重置</button>
+                        </div>
+                    </div>
+                    
+                    <div class="timer-section negative-timer">
+                        <div class="team-name">反方计时器</div>
+                        <div class="time-left">01:00</div>
+                        <div class="control-buttons">
+                            <button class="btn-start">开始</button>
+                            <button class="btn-pause">暂停</button>
+                            <button class="btn-reset">重置</button>
+                        </div>
+                    </div>
+                    
+                    <div class="global-controls">
+                        <button class="btn-next">下一阶段</button>
+                        <button class="btn-end" id="endDebateBtn">辩论结束</button>
+                    </div>
+                </div>
+                
+                <div class="stages-section">
+                    <h2>辩论流程</h2>
+                    <ul class="stages-list">
+                        <li class="stage-item active" data-stage="1">
+                            <div class="stage-title">第一阶段</div>
+                            <div class="stage-duration">双方一辩陈述本方观点，限时2分半。</div>
+                        </li>
+                        <li class="stage-item" data-stage="2">
+                            <div class="stage-title">第二阶段</div>
+                            <div class="stage-duration">正方二辩对正方一辩陈词进行补充，限时2分钟。</div>
+                        </li>
+                        <li class="stage-item" data-stage="3">
+                            <div class="stage-title">第三阶段</div>
+                            <div class="stage-duration">反方二辩反驳正方观点，限时2分钟。</div>
+                        </li>
+                        <li class="stage-item" data-stage="4">
+                            <div class="stage-title">第四阶段</div>
+                            <div class="stage-duration">双方三辩反驳对方观点，限时2分钟。</div>
+                        </li>
+                        <li class="stage-item" data-stage="5">
+                            <div class="stage-title">第五阶段</div>
+                            <div class="stage-duration">正反方进行交替发言，反方先开始，限时8分钟。</div>
+                        </li>
+                        <li class="stage-item" data-stage="6">
+                            <div class="stage-title">第六阶段</div>
+                            <div class="stage-duration">双方四辩总结辩题，限时2分半。</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 投票界面 -->
+        <div class="voting-section" id="votingSection">
+            <button class="back-to-debate" id="backToDebateBtn">返回辩论计时</button>
+            
+            <h2>观众投票</h2>
+            <div class="voting-form">
+                <div class="voting-category">
+                    <h3>支持方</h3>
+                    <div class="vote-options">
+                        <div class="vote-option">
+                            <input type="radio" id="vote-affirmative" name="support" value="affirmative">
+                            <label for="vote-affirmative">正方：取经团队的成功主要靠孙悟空</label>
+                        </div>
+                        <div class="vote-option">
+                            <input type="radio" id="vote-negative" name="support" value="negative">
+                            <label for="vote-negative">反方：取经团队的成功靠的是团队协作</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="voting-category">
+                    <h3>正方最佳辩手</h3>
+                    <div class="vote-options">
+                        <div class="vote-option">
+                            <input type="radio" id="best-a1" name="best_affirmative" value="a1">
+                            <label for="best-a1">陶泓源（一辩）</label>
+                        </div>
+                        <div class="vote-option">
+                            <input type="radio" id="best-a2" name="best_affirmative" value="a2">
+                            <label for="best-a2">徐晨玥（二辩）</label>
+                        </div>
+                        <div class="vote-option">
+                            <input type="radio" id="best-a3" name="best_affirmative" value="a3">
+                            <label for="best-a3">白思睿（三辩）</label>
+                        </div>
+                        <div class="vote-option">
+                            <input type="radio" id="best-a4" name="best_affirmative" value="a4">
+                            <label for="best-a4">江成仪（四辩）</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="voting-category">
+                    <h3>反方最佳辩手</h3>
+                    <div class="vote-options">
+                        <div class="vote-option">
+                            <input type="radio" id="best-b1" name="best_negative" value="b1">
+                            <label for="best-b1">邵向南（一辩）</label>
+                        </div>
+                        <div class="vote-option">
+                            <input type="radio" id="best-b2" name="best_negative" value="b2">
+                            <label for="best-b2">刘梓睿（二辩）</label>
+                        </div>
+                        <div class="vote-option">
+                            <input type="radio" id="best-b3" name="best_negative" value="b3">
+                            <label for="best-b3">林米诺（三辩）</label>
+                        </div>
+                        <div class="vote-option">
+                            <input type="radio" id="best-b4" name="best_negative" value="b4">
+                            <label for="best-b4">林名正（四辩）</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-buttons">
+                <button class="btn-submit-vote">提交投票</button>
+                <button class="btn-show-results">显示投票结果</button>
+            </div>
+            
+            <div class="results-section" id="resultsSection" style="display: block;">
+                <h2>投票结果</h2>
+                <div class="result-card">
+                    <h4>支持方投票结果</h4>
+                    <div class="dual-result-bar">
+                        <div class="result-fill affirmative-fill" id="affirmativeVotes" style="width: 50%"></div>
+                        <div class="result-fill negative-fill" id="negativeVotes" style="width: 50%"></div>
+                    </div>
+                    <div class="result-count">
+                        <span id="affirmativeCount" class="affirmative-count">正方: 0票 (50%)</span> | 
+                        <span id="negativeCount" class="negative-count">反方: 0票 (50%)</span>
+                    </div>
+                </div>
+                
+                <!-- 修改：最佳辩手左右排列 -->
+                <div class="best-debaters-container">
+                    <div class="best-debater-card">
+                        <h4>正方最佳辩手投票结果</h4>
+                        <ul class="candidates-list" id="bestAffirmativeList">
+                            <li class="candidate-item">
+                                <span>暂无投票</span>
+                                <span class="candidate-votes">0票</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="best-debater-card">
+                        <h4>反方最佳辩手投票结果</h4>
+                        <ul class="candidates-list" id="bestNegativeList">
+                            <li class="candidate-item">
+                                <span>暂无投票</span>
+                                <span class="candidate-votes">0票</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 辩论阶段数据 - 根据新规则更新
+        const debateStages = [
+            {
+                name: "双方一辩发言",
+                duration: 150, // 秒
+                alerts: [90,30], // 改为30秒提示
+                speakers: ["正方一辩", "反方一辩"],
+                currentSpeaker: 0,
+                activeTeam: "affirmative"
+            },
+            {
+                name: "正方二辩发言",
+                duration: 120,
+                alerts: [60,30],
+                speakers: ["正方二辩"],
+                currentSpeaker: 0,
+                activeTeam: "affirmative"
+            },
+            {
+                name: "反方二辩发言",
+                duration: 120,
+                alerts: [60,30],
+                speakers: ["反方二辩"],
+                currentSpeaker: 0,
+                activeTeam: "affirmative"
+            },
+            {
+                name: "双方三辩发言",
+                duration: 120,
+                alerts: [60, 30], // 两次提示
+                speakers: ["正方三辩", "反方三辩"],
+                currentSpeaker: 0,
+                activeTeam: "affirmative"
+            },
+            {
+                name: "全体辩手发言",
+                duration: 480,
+                alerts: [240,90],
+                speakers: ["正方全体", "反方全体"],
+                currentSpeaker: 0,
+                activeTeam: "affirmative"
+            },
+            {
+                name: "双方四辩发言",
+                duration: 150,
+                alerts: [90,30],
+                speakers: ["正方四辩", "反方四辩"],
+                currentSpeaker: 0,
+                activeTeam: "affirmative"
+            }
+        ];
+
+        // 计时器状态
+        let currentStageIndex = 0;
+        let affirmativeTimeLeft = debateStages[currentStageIndex].duration;
+        let negativeTimeLeft = debateStages[currentStageIndex].duration;
+        let affirmativeTimerInterval = null;
+        let negativeTimerInterval = null;
+        let isAffirmativeRunning = false;
+        let isNegativeRunning = false;
+
+        // 投票数据
+        let votes = {
+            affirmative: 0,
+            negative: 0,
+            bestAffirmative: {'a1': 0, 'a2': 0, 'a3': 0, 'a4': 0},
+            bestNegative: {'b1': 0, 'b2': 0, 'b3': 0, 'b4': 0}
+        };
+
+        // DOM元素
+        const debateSection = document.getElementById('debateSection');
+        const votingSection = document.getElementById('votingSection');
+        const endDebateBtn = document.getElementById('endDebateBtn');
+        const backToDebateBtn = document.getElementById('backToDebateBtn');
+        const currentStageEl = document.querySelector('.current-stage');
+        const affirmativeTimeLeftEl = document.querySelector('.affirmative-timer .time-left');
+        const negativeTimeLeftEl = document.querySelector('.negative-timer .time-left');
+        const affirmativeTimerEl = document.querySelector('.affirmative-timer');
+        const negativeTimerEl = document.querySelector('.negative-timer');
+        const affirmativeStartBtn = document.querySelector('.affirmative-timer .btn-start');
+        const affirmativePauseBtn = document.querySelector('.affirmative-timer .btn-pause');
+        const affirmativeResetBtn = document.querySelector('.affirmative-timer .btn-reset');
+        const negativeStartBtn = document.querySelector('.negative-timer .btn-start');
+        const negativePauseBtn = document.querySelector('.negative-timer .btn-pause');
+        const negativeResetBtn = document.querySelector('.negative-timer .btn-reset');
+        const btnNext = document.querySelector('.btn-next');
+        const stageItems = document.querySelectorAll('.stage-item');
+        const btnSubmitVote = document.querySelector('.btn-submit-vote');
+        const btnShowResults = document.querySelector('.btn-show-results');
+        const resultsSection = document.getElementById('resultsSection');
+        const affirmativeVotesEl = document.getElementById('affirmativeVotes');
+        const negativeVotesEl = document.getElementById('negativeVotes');
+        const affirmativeCountEl = document.getElementById('affirmativeCount');
+        const negativeCountEl = document.getElementById('negativeCount');
+        const bestAffirmativeListEl = document.getElementById('bestAffirmativeList');
+        const bestNegativeListEl = document.getElementById('bestNegativeList');
+
+        // 初始化显示
+        updateDisplay();
+        showResults(); // 初始显示投票结果
+
+        // 事件监听
+        affirmativeStartBtn.addEventListener('click', () => startTimer('affirmative'));
+        affirmativePauseBtn.addEventListener('click', () => pauseTimer('affirmative'));
+        affirmativeResetBtn.addEventListener('click', () => resetTimer('affirmative'));
+        negativeStartBtn.addEventListener('click', () => startTimer('negative'));
+        negativePauseBtn.addEventListener('click', () => pauseTimer('negative'));
+        negativeResetBtn.addEventListener('click', () => resetTimer('negative'));
+        btnNext.addEventListener('click', nextStage);
+        
+        stageItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const stageIndex = parseInt(item.getAttribute('data-stage')) - 1;
+                if (stageIndex !== currentStageIndex) {
+                    currentStageIndex = stageIndex;
+                    resetTimer('both');
+                    updateDisplay();
+                }
+            });
+        });
+        
+        btnSubmitVote.addEventListener('click', submitVote);
+        btnShowResults.addEventListener('click', showResults);
+        
+        // 新增：界面切换事件
+        endDebateBtn.addEventListener('click', () => {
+            debateSection.style.display = 'none';
+            votingSection.style.display = 'block';
+        });
+        
+        backToDebateBtn.addEventListener('click', () => {
+            votingSection.style.display = 'none';
+            debateSection.style.display = 'block';
+        });
+
+        // 计时器函数
+        function startTimer(team) {
+            if (team === 'affirmative' && !isAffirmativeRunning) {
+                isAffirmativeRunning = true;
+                affirmativeTimerInterval = setInterval(() => {
+                    affirmativeTimeLeft--;
+                    updateTimerDisplay();
+                    
+                    // 检查提示时间
+                    checkAlerts('affirmative', affirmativeTimeLeft);
+                    
+                    // 检查时间是否结束
+                    if (affirmativeTimeLeft <= 0) {
+                        pauseTimer('affirmative');
+                    }
+                }, 1000);
+            } else if (team === 'negative' && !isNegativeRunning) {
+                isNegativeRunning = true;
+                negativeTimerInterval = setInterval(() => {
+                    negativeTimeLeft--;
+                    updateTimerDisplay();
+                    
+                    // 检查提示时间
+                    checkAlerts('negative', negativeTimeLeft);
+                    
+                    // 检查时间是否结束
+                    if (negativeTimeLeft <= 0) {
+                        pauseTimer('negative');
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer(team) {
+            if (team === 'affirmative') {
+                isAffirmativeRunning = false;
+                clearInterval(affirmativeTimerInterval);
+            } else if (team === 'negative') {
+                isNegativeRunning = false;
+                clearInterval(negativeTimerInterval);
+            }
+        }
+
+        function resetTimer(team) {
+            if (team === 'affirmative' || team === 'both') {
+                pauseTimer('affirmative');
+                affirmativeTimeLeft = debateStages[currentStageIndex].duration;
+                resetTimerColor('affirmative');
+            }
+            if (team === 'negative' || team === 'both') {
+                pauseTimer('negative');
+                negativeTimeLeft = debateStages[currentStageIndex].duration;
+                resetTimerColor('negative');
+            }
+            updateTimerDisplay();
+        }
+
+        function nextStage() {
+            if (currentStageIndex < debateStages.length - 1) {
+                currentStageIndex++;
+                resetTimer('both');
+                updateDisplay();
+            } else {
+                alert("所有辩论阶段已完成！");
+            }
+        }
+
+        // 检查提示时间并改变颜色
+        function checkAlerts(team, timeLeft) {
+            const currentStage = debateStages[currentStageIndex];
+            const alerts = currentStage.alerts;
+            
+            if (alerts.length === 1) {
+                // 只有一个提示，直接变红
+                if (timeLeft <= alerts[0]) {
+                    setTimerColor(team, 'red');
+                }
+            } else if (alerts.length === 2) {
+                // 有两个提示，第一次变黄，第二次变红
+                if (timeLeft <= alerts[1]) {
+                    setTimerColor(team, 'red');
+                } else if (timeLeft <= alerts[0]) {
+                    setTimerColor(team, 'yellow');
+                }
+            }
+        }
+
+        function setTimerColor(team, color) {
+            if (team === 'affirmative') {
+                affirmativeTimeLeftEl.className = 'time-left ' + color;
+            } else if (team === 'negative') {
+                negativeTimeLeftEl.className = 'time-left ' + color;
+            }
+        }
+
+        function resetTimerColor(team) {
+            if (team === 'affirmative') {
+                affirmativeTimeLeftEl.className = 'time-left';
+            } else if (team === 'negative') {
+                negativeTimeLeftEl.className = 'time-left';
+            }
+        }
+
+        // 显示更新函数
+        function updateDisplay() {
+            const currentStage = debateStages[currentStageIndex];
+            currentStageEl.textContent = currentStage.name;
+            affirmativeTimeLeft = currentStage.duration;
+            negativeTimeLeft = currentStage.duration;
+            updateTimerDisplay();
+            
+            // 更新计时器高亮
+            if (currentStage.activeTeam === "affirmative") {
+                affirmativeTimerEl.classList.add('active');
+                negativeTimerEl.classList.remove('active');
+            } else {
+                affirmativeTimerEl.classList.remove('active');
+                negativeTimerEl.classList.add('active');
+            }
+            
+            // 更新阶段列表高亮
+            stageItems.forEach((item, index) => {
+                if (index === currentStageIndex) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // 重置计时器颜色
+            resetTimerColor('affirmative');
+            resetTimerColor('negative');
+        }
+
+        function updateTimerDisplay() {
+            const formatTime = (time) => {
+                const minutes = Math.floor(time / 60);
+                const seconds = time % 60;
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            };
+            
+            affirmativeTimeLeftEl.textContent = formatTime(affirmativeTimeLeft);
+            negativeTimeLeftEl.textContent = formatTime(negativeTimeLeft);
+        }
+
+        // 投票功能
+        function submitVote() {
+            const support = document.querySelector('input[name="support"]:checked');
+            const bestAffirmative = document.querySelector('input[name="best_affirmative"]:checked');
+            const bestNegative = document.querySelector('input[name="best_negative"]:checked');
+            
+            if (!support || !bestAffirmative || !bestNegative) {
+                alert("请完成所有投票选项！");
+                return;
+            }
+            
+            // 记录投票
+            if (support.value === 'affirmative') {
+                votes.affirmative++;
+            } else {
+                votes.negative++;
+            }
+            
+            votes.bestAffirmative[bestAffirmative.value]++;
+            votes.bestNegative[bestNegative.value]++;
+
+            showResults();
+            
+            // 清空选项
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+        }
+        function showResults() {
+            // 计算总票数
+            const totalVotes = votes.affirmative + votes.negative;
+            
+            // 更新支持方投票结果
+            if (totalVotes > 0) {
+                const affirmativePercentage = Math.round((votes.affirmative / totalVotes) * 100);
+                const negativePercentage = 100 - affirmativePercentage;
+                
+                affirmativeVotesEl.style.width = `${affirmativePercentage}%`;
+                negativeVotesEl.style.width = `${negativePercentage}%`;
+                affirmativeCountEl.textContent = `正方: ${votes.affirmative}票 (${affirmativePercentage}%)`;
+                negativeCountEl.textContent = `反方: ${votes.negative}票 (${negativePercentage}%)`;
+            }
+            
+            // 更新正方最佳辩手结果
+            updateCandidateList(bestAffirmativeListEl, votes.bestAffirmative, true);
+            
+            // 更新反方最佳辩手结果
+            updateCandidateList(bestNegativeListEl, votes.bestNegative, false);
+            
+            // 显示结果
+            resultsSection.style.display = "block";
+        }
+
+        function updateCandidateList(listElement, candidateVotes, isAffirmative) {
+            // 清空列表
+            listElement.innerHTML = '';
+            
+            // 将候选人按票数排序
+            const candidates = Object.entries(candidateVotes)
+                .filter(([_, votes]) => votes > 0)
+                .sort((a, b) => b[1] - a[1]);
+            
+            // 添加候选人到列表
+            candidates.forEach(([candidateId, voteCount]) => {
+                const candidateName = getCandidateName(candidateId, isAffirmative);
+                const listItem = document.createElement('li');
+                listItem.className = 'candidate-item';
+                listItem.innerHTML = `<span>${candidateName}</span><span class="candidate-votes">${voteCount}票</span>`;
+                listElement.appendChild(listItem);
+            });
+            
+            // 如果没有候选人，显示提示
+            if (candidates.length === 0) {
+                const listItem = document.createElement('li');
+                listItem.className = 'candidate-item';
+                listItem.innerHTML = `<span>暂无投票</span><span class="candidate-votes">0票</span>`;
+                listElement.appendChild(listItem);
+            }
+        }
+
+        function getCandidateName(candidateId, isAffirmative) {
+            const affirmativeNames = {
+                'a1': '陶泓源（一辩）', 
+                'a2': '徐晨玥（二辩）', 
+                'a3': '白思睿（三辩）', 
+                'a4': '江成仪（四辩）'
+            };
+            
+            const negativeNames = {
+                'b1': '邵向南（一辩）', 
+                'b2': '刘梓睿（二辩）', 
+                'b3': '林米诺（三辩）', 
+                'b4': '林名正（四辩）'
+            };  
+            
+            return isAffirmative ? 
+                (affirmativeNames[candidateId] || candidateId) : 
+                (negativeNames[candidateId] || candidateId);
+        }
+    </script>
+</body>
+</html>
